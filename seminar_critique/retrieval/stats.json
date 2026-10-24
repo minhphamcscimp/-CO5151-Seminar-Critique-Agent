@@ -1,0 +1,40 @@
+{
+  "papers": 10,
+  "papers_per_topic": {
+    "self-improvement-reflection": 6,
+    "tool-use-mcp": 4
+  },
+  "chunks": 299,
+  "chunks_per_topic": {
+    "self-improvement-reflection": 178,
+    "tool-use-mcp": 121
+  },
+  "chunk_size_words": 250,
+  "chunk_overlap_words": 40,
+  "avg_words_per_chunk": 217.1,
+  "indexing": "BM25 (k1=1.5, b=0.75), lexical, no embedding model",
+  "graph": {
+    "nodes": 309,
+    "nodes_by_type": {
+      "paper": 10,
+      "chunk": 299
+    },
+    "edges": 772,
+    "edges_by_kind": {
+      "part_of": 299,
+      "cites": 24,
+      "adjacent": 289,
+      "similar": 160
+    }
+  },
+  "graph_edge_rules": {
+    "adjacent": "consecutive chunks of one paper",
+    "similar": "top 3 TF-IDF cosine neighbours in other papers of the same topic, cosine >= 0.15",
+    "cites": "paper text mentions 'Surname et al., year' of another paper in the corpus"
+  },
+  "top_k_default": 5,
+  "graph_expansion": {
+    "propagation_weight": 0.5,
+    "cite_bonus": 0.1
+  }
+}
