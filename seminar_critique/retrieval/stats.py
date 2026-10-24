@@ -38,6 +38,7 @@ def compute() -> dict:
         },
         "top_k_default": retriever.DEFAULT_K,
         "graph_expansion": {"propagation_weight": retriever.PROPAGATION, "cite_bonus": retriever.CITE_BONUS},
+        "max_chunks_per_paper_in_top_k": retriever.MAX_PER_PAPER,
     }
 
 
