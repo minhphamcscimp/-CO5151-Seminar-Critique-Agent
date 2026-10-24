@@ -284,3 +284,13 @@ def test_garbled_headings_with_symbols_or_very_long_words_rejected():
     ])
     names = [n for n, _ in sections_from_text(text)]
     assert names == ["Abstract", "Section 1 Introduction", "Section 2 Method", "Section 3 Results", "Section 4 Discussion"]
+
+
+def test_max_per_paper_keeps_one_paper_from_taking_all_slots():
+    from collections import Counter
+    q = "How does a language model decide which API to call"
+    capped = retrieve_with(q, TOOLS, 5)
+    assert max(Counter(c.paper for c in capped).values()) <= 3
+    assert len({c.paper for c in capped}) >= 2
+    uncapped = retrieve_with(q, TOOLS, 5, max_per_paper=None)
+    assert len(uncapped) == 5

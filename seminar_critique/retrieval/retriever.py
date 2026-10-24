@@ -31,6 +31,7 @@ BM25_B = 0.75
 PROPAGATION = 0.5   # weight of a neighbour's score
 CITE_BONUS = 0.1    # bonus for papers linked to the best hit's paper
 DEFAULT_K = 5
+MAX_PER_PAPER = 3   # at most this many chunks from one paper in the top-k (None = no limit)
 
 
 class _Index:
@@ -82,8 +83,27 @@ def _to_chunk(c: dict, score: float) -> Chunk:
     return Chunk(id=c["id"], paper=c["paper"], section=c["section"], text=c["text"], score=round(score, 4))
 
 
-def retrieve_with(query: str, topic: str, k: int = DEFAULT_K, expand: bool = True) -> list[Chunk]:
+def _pick(order: list[int], k: int, cap: int | None, paper_of) -> list[int]:
+    """First k of `order`, with at most `cap` chunks per paper (filled up if there are not enough papers)."""
+    if cap is None:
+        return order[:k]
+    picked, skipped, count = [], [], Counter()
+    for i in order:
+        p = paper_of(i)
+        if count[p] < cap:
+            picked.append(i)
+            count[p] += 1
+            if len(picked) == k:
+                return picked
+        else:
+            skipped.append(i)
+    return (picked + skipped)[:k]
+
+
+def retrieve_with(query: str, topic: str, k: int = DEFAULT_K, expand: bool = True,
+                  max_per_paper: int | None = MAX_PER_PAPER) -> list[Chunk]:
     ix = get_index()
+    paper_of = lambda i: ix.chunks[i]["paper_id"]  # noqa: E731
     idxs = ix.by_topic.get(topic) or list(range(len(ix.chunks)))  # unknown topic: search everything
     scores = ix.bm25(tokenize(query), idxs)
     if not scores:  # nothing matches: keep the contract and return the first chunks
@@ -93,10 +113,10 @@ def retrieve_with(query: str, topic: str, k: int = DEFAULT_K, expand: bool = Tru
     top = scores[ranked[0]]
     norm = {i: scores[i] / top for i in ranked}
     if not expand:
-        return [_to_chunk(ix.chunks[i], scores[i]) for i in ranked[:k]]
+        return [_to_chunk(ix.chunks[i], scores[i]) for i in _pick(ranked, k, max_per_paper, paper_of)]
 
     allowed = set(idxs)
-    seeds = ranked[:k]
+    seeds = _pick(ranked, k, max_per_paper, paper_of)
     final = {i: norm[i] for i in seeds}
     for s in seeds:
         for j, w in ix.neighbors[s]:
@@ -109,7 +129,7 @@ def retrieve_with(query: str, topic: str, k: int = DEFAULT_K, expand: bool = Tru
     for j in final:
         if ix.chunks[j]["paper_id"] in ix.paper_links[best_paper]:
             final[j] += CITE_BONUS
-    out = sorted(final, key=final.get, reverse=True)[:k]
+    out = _pick(sorted(final, key=final.get, reverse=True), k, max_per_paper, paper_of)
     return [_to_chunk(ix.chunks[i], final[i]) for i in out]
 
 
