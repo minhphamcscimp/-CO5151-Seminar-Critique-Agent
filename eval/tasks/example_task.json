@@ -1,0 +1,17 @@
+{
+  "id": "example-01",
+  "topic": "self-improvement-reflection",
+  "input": "(example) Huang et al. 2024 claim that LLMs cannot self-correct reasoning without external feedback. Critique this claim.",
+  "rubric_axes": [
+    "assumptions",
+    "baseline fairness",
+    "data reliability",
+    "generalizability",
+    "reproducibility"
+  ],
+  "key_points": [
+    "intrinsic self-correction",
+    "external feedback",
+    "baseline"
+  ]
+}

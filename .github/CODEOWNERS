@@ -1,0 +1,11 @@
+# Replace each TODO with the GitHub username of the owner, then remove the leading "#".
+# Owners are asked to review changes in their folder.
+
+# /seminar_critique/llm/             @TODO-van
+# /seminar_critique/agents/          @TODO-van
+# /seminar_critique/orchestrator.py  @TODO-van
+# /seminar_critique/configs.py       @TODO-van
+# /seminar_critique/retrieval/       @TODO-minh
+# /seminar_critique/tools/           @TODO-tin
+# /seminar_critique/security/        @TODO-tin
+# /eval/                             @TODO-tam

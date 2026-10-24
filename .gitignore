@@ -7,6 +7,7 @@ __pycache__/
 *.pyc
 venv/
 .venv/
+.pytest_cache/
 
 # Node
 node_modules/
@@ -18,3 +19,7 @@ node_modules/
 
 # File sinh ra khi chạy
 *.log
+
+# Trace của từng lần chạy (chỉ commit eval/results/*.csv)
+traces/*
+!traces/.gitkeep
