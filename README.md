@@ -28,7 +28,7 @@ Experiment configurations (see `seminar_critique/configs.py`):
 |---|---|
 | Skeleton, interfaces, contract tests | done (stubs, runs end-to-end with FakeLLM) |
 | Real LLM client | not started |
-| Retrieval (GraphRAG) | stub |
+| Retrieval (GraphRAG) | real: BM25 + graph expansion, 10 papers, 2 topics (retrieval/stats.json) |
 | Tools and permissions | stub with allowlist |
 | Eval set and runner | stub, 1 example task |
 | Threat model | template |
