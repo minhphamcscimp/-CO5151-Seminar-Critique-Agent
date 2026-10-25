@@ -87,7 +87,7 @@ def test_invalid_arguments_are_rejected(name, metric):
     "{}", "not json", '[{"benchmark": "GSM8K"}]',
     *[json.dumps([{"benchmark": "GSM8K", "metric": "accuracy", "method": "test",
                    "value": value, "source": "paper, Table 1"}])
-      for value in (None, True, "78.2", float("nan"), float("inf"), -1, 101)],
+      for value in (None, True, "78.2", float("nan"), float("inf"), -1, 101, 10**400)],
 ])
 def test_malformed_dataset_fails_instead_of_returning_evidence(monkeypatch, tmp_path, contents):
     path = tmp_path / "benchmarks.json"

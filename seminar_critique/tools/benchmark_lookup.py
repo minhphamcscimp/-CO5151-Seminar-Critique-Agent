@@ -10,7 +10,6 @@ never from a live write-capable service.
 from __future__ import annotations
 
 import json
-import math
 from pathlib import Path
 
 
@@ -38,7 +37,7 @@ def lookup_benchmark(name: str, metric: str) -> dict:
         ):
             raise ValueError("benchmark records need benchmark, metric, method and source")
         value = record.get("value")
-        if type(value) not in (int, float) or not math.isfinite(value) or not 0 <= value <= 100:
+        if type(value) not in (int, float) or not 0 <= value <= 100:
             raise ValueError("benchmark value must be a finite number between 0 and 100")
         if (record["benchmark"].casefold(), record["metric"].casefold()) == (
             name.strip().casefold(), metric.strip().casefold()
