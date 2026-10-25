@@ -33,5 +33,7 @@ def sanitize_untrusted(text: str, source: str) -> str:
     if not isinstance(text, str) or not isinstance(source, str):
         raise TypeError("text and source must be strings")
     body = _clean(text, MAX_UNTRUSTED_CHARS)
+    if len(text) > MAX_UNTRUSTED_CHARS:
+        body += f"\n[Truncated after {MAX_UNTRUSTED_CHARS} input characters.]"
     label = _clean(source, MAX_SOURCE_CHARS)
     return f'<untrusted source="{label}">\n{body}\n</untrusted>'

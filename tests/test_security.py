@@ -45,9 +45,19 @@ def test_controls_removed_but_vietnamese_and_layout_preserved():
 def test_content_and_source_lengths_are_bounded_before_escaping():
     wrapped = sanitize_untrusted("<" * MAX_UNTRUSTED_CHARS + "hidden tail", "s" * (MAX_SOURCE_CHARS + 1))
     element = ElementTree.fromstring(wrapped)
-    assert element.text == "\n" + "<" * MAX_UNTRUSTED_CHARS + "\n"
+    assert element.text == (
+        "\n" + "<" * MAX_UNTRUSTED_CHARS
+        + f"\n[Truncated after {MAX_UNTRUSTED_CHARS} input characters.]\n"
+    )
     assert len(element.attrib["source"]) == MAX_SOURCE_CHARS
     assert "hidden tail" not in wrapped
+
+
+@pytest.mark.parametrize("length", [0, MAX_UNTRUSTED_CHARS - 1, MAX_UNTRUSTED_CHARS])
+def test_content_within_limit_has_no_truncation_notice(length):
+    text = "x" * length
+    element = ElementTree.fromstring(sanitize_untrusted(text, "paper"))
+    assert element.text == f"\n{text}\n"
 
 
 @pytest.mark.parametrize("text,source", [(None, "paper"), ("paper", None)])

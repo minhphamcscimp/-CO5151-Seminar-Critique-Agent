@@ -47,7 +47,9 @@ commands also write artifacts outside the agent tool registry.
   Unicode `Cc`, `Cf` and `Cs` characters except newline/tab, and escapes `&`, `<`,
   `>`, and quotes. Vietnamese text and normal whitespace are retained. Escaped
   output can be longer than 12,000 characters; this is not a token or whole-prompt
-  budget. Content beyond the limit is omitted.
+  budget. Content beyond the limit is omitted. When text exceeds the limit, a
+  truncation notice is appended inside the `<untrusted>` wrapper so the agent
+  knows it received only part of the input.
 - The system policy in `agents.base.call_agent` says content inside `<untrusted>`
   is data, never instructions. Escaping prevents literal delimiter breakout; it
   does not remove semantic instructions or guarantee the model will obey.
