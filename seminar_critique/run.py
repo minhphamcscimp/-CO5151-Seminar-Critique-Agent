@@ -1,8 +1,10 @@
 """Run one task with one config and save the trace.
 
     python -m seminar_critique.run --task eval/tasks/example_task.json --config C
+    python -m seminar_critique.run --task eval/tasks/example_task.json --config A --llm gemini
 
 Uses the offline FakeLLM by default, so it works without any API key.
+With --llm gemini the key is read from GEMINI_API_KEY (.env is loaded automatically).
 The trace JSON is what the report shows as the "real trace" (Part 2).
 """
 from __future__ import annotations
@@ -36,8 +38,11 @@ def main() -> None:
 
     result = run_pipeline(Task.from_json(args.task), CONFIGS[args.config], get_client(args.llm))
     file = save_trace(result, args.out)
-    print(f"steps={len(result.trace)} tokens={result.usage.prompt_tokens + result.usage.completion_tokens} "
-          f"latency={result.usage.latency_s:.3f}s trace={file}")
+    tokens = result.usage.prompt_tokens + result.usage.completion_tokens
+    print(
+        f"config={result.config_name} steps={len(result.trace)} tokens={tokens} "
+        f"cost_usd={result.usage.cost_usd:.6f} latency={result.usage.latency_s:.3f}s trace={file}"
+    )
 
 
 if __name__ == "__main__":
