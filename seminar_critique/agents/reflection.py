@@ -34,5 +34,6 @@ def reflect(
 ) -> tuple[str, TraceStep]:
     evidence_text = json.dumps(evidence, ensure_ascii=False) if evidence else "(none)"
     external = sanitize_untrusted(evidence_text, "benchmark_tool")
-    user = f"Draft:\n{draft}\n\nExternal evidence: {external}"
+    safe_draft = sanitize_untrusted(draft, "draft")
+    user = f"Draft:\n{safe_draft}\n\nExternal evidence: {external}"
     return call_agent(llm, cfg, "reflection", SYSTEM, user, tool_calls=evidence)
