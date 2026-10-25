@@ -14,7 +14,8 @@ import time
 
 from .agents import critique, reflect, summarize, synthesize
 from .agents.base import call_agent
-from .llm import LLMClient, get_client
+from .configs import resolve_models
+from .llm import GeminiClient, LLMClient, get_client
 from .retrieval import retrieve
 from .schemas import Chunk, Config, Result, Task, TraceStep, Usage
 from .security import sanitize_untrusted
@@ -23,8 +24,26 @@ from .tools import call_tool
 BASELINE_SYSTEM = "Write a structured critique of the following seminar material."
 
 
+def _normalize(text: str) -> str:
+    """Ignore whitespace and case when comparing two drafts."""
+    return " ".join(text.split()).casefold()
+
+
+def _is_unchanged(previous: str, current: str) -> bool:
+    """True when a reflection pass produced no real change.
+
+    Also true when the model answers with the agreed no-op marker, so the
+    reflection prompt can say "reply NO CHANGE if the evidence adds nothing".
+    """
+    current_norm = _normalize(current)
+    return current_norm == _normalize(previous) or current_norm.startswith("no change")
+
+
 def run_pipeline(task: Task, cfg: Config, llm: LLMClient | None = None) -> Result:
     llm = llm or get_client("fake")
+    # Placeholder model names become the real model when running on Gemini,
+    # so eval/runner.py does not have to know anything about model names.
+    cfg = resolve_models(cfg, "gemini" if isinstance(llm, GeminiClient) else "fake")
     started = time.perf_counter()
     trace: list[TraceStep] = []
 
@@ -58,9 +77,20 @@ def run_pipeline(task: Task, cfg: Config, llm: LLMClient | None = None) -> Resul
         trace.append(step)
 
         for _ in range(cfg.max_reflection_iters):
+            if not tool_results and not chunks:
+                # Reflection may only use external evidence. With no evidence
+                # there is nothing to revise against, so another call would just
+                # be intrinsic self-correction (Huang et al., ICLR 2024).
+                break
+            previous = answer
             answer, step = reflect(answer, tool_results, llm, cfg)
             trace.append(step)
-            # TODO (Van): stop early when the evidence changes nothing.
+            if _is_unchanged(previous, answer):
+                # The evidence changed nothing; keep the previous draft (the
+                # model may have answered only with the NO CHANGE marker) and
+                # stop instead of paying for another identical call.
+                answer = previous
+                break
 
     total = Usage()
     for s in trace:
