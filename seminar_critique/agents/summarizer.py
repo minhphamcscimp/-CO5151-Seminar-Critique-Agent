@@ -7,17 +7,24 @@ from __future__ import annotations
 
 from ..llm import LLMClient
 from ..schemas import Chunk, Config, TraceStep
-from .base import call_agent
-
+from .base import UNTRUSTED_RULE, call_agent
 SYSTEM = (
-    "You summarize a research paper for a critique. Keep problem, method, "
-    "experimental setup and results. Do not add claims that are not in the text."
-)  # TODO (Van): refine the prompt
+    "You summarize research material so that a reviewer can critique it.\n"
+    "Write exactly these four sections, in this order, each 2-4 sentences:\n"
+    "1. Problem - what question the work attacks and why it matters.\n"
+    "2. Method - the proposed approach and what is new in it.\n"
+    "3. Experimental setup - datasets, baselines, models, metrics, budget.\n"
+    "4. Results - the main numbers, with the table or section they come from.\n"
+    "Rules: use only the material and the retrieved context; never invent a number; "
+    "write 'not stated' when the material does not say; keep the authors' own claims "
+    "as claims, do not endorse them. Maximum 300 words.\n"
+    + UNTRUSTED_RULE
+)
 
 
 def summarize(
     material: str, chunks: list[Chunk], llm: LLMClient, cfg: Config
 ) -> tuple[str, TraceStep]:
-    context = "\n".join(f"[{c.paper} {c.section}] {c.text}" for c in chunks)
+    context = "\n".join(f"[{c.paper} {c.section}] {c.text}" for c in chunks) or "(none)"
     user = f"Material:\n{material}\n\nRetrieved context:\n{context}"
     return call_agent(llm, cfg, "summarizer", SYSTEM, user)
