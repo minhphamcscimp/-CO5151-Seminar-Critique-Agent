@@ -27,6 +27,34 @@ assert "Table 2" in out["result"]["source"]
 case-folding both arguments. Unknown metrics are not silently substituted. File
 and schema errors propagate rather than becoming a fabricated result.
 
+## Handle missing evidence and blocked tools
+
+A missing pair means there is no matching published evidence in the local file;
+it must not be interpreted as a score of zero. Check `found` before reading
+`value` or citing `source`:
+
+```python
+out = call_tool("lookup_benchmark", name="unknown-benchmark", metric="accuracy")
+result = out["result"]
+if result["found"]:
+    print(result["value"], result["source"])
+else:
+    print("No matching published result; no score available.")
+```
+
+A blocked tool raises `PermissionError` instead of returning a lookup result.
+Report that error to the caller; do not retry by changing the allowlist:
+
+```python
+try:
+    call_tool("delete_everything")
+except PermissionError as error:
+    print(f"Tool call blocked: {error}")
+```
+
+Missing files and malformed benchmark data are operational errors, distinct from
+a valid lookup miss. Preserve those exceptions so the dataset can be repaired.
+
 ## Published data (verified 2026-10-25)
 
 Both papers are already listed in `data/papers.md`. Every record identifies the
