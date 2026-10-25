@@ -6,8 +6,11 @@ discussion: intrinsic self-correction does not work, feedback-grounded correctio
 """
 from __future__ import annotations
 
+import json
+
 from ..llm import LLMClient
 from ..schemas import Config, TraceStep
+from ..security import sanitize_untrusted
 from .base import UNTRUSTED_RULE, call_agent
 
 NO_CHANGE = "NO CHANGE"
@@ -29,5 +32,8 @@ SYSTEM = (
 def reflect(
     draft: str, evidence: list[dict], llm: LLMClient, cfg: Config
 ) -> tuple[str, TraceStep]:
-    user = f"Draft:\n{draft}\n\nExternal evidence: {evidence or '(none)'}"
+    evidence_text = json.dumps(evidence, ensure_ascii=False) if evidence else "(none)"
+    external = sanitize_untrusted(evidence_text, "benchmark_tool")
+    safe_draft = sanitize_untrusted(draft, "draft")
+    user = f"Draft:\n{safe_draft}\n\nExternal evidence: {external}"
     return call_agent(llm, cfg, "reflection", SYSTEM, user, tool_calls=evidence)

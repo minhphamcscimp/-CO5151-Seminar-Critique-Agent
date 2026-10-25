@@ -57,11 +57,6 @@ def run_pipeline(task: Task, cfg: Config, llm: LLMClient | None = None) -> Resul
         chunks: list[Chunk] = []
         if cfg.use_retrieval:
             chunks = retrieve(task.input[:200], task.topic)
-            # Entry point 2: retrieved chunks are untrusted too.
-            chunks = [
-                Chunk(c.id, c.paper, c.section, sanitize_untrusted(c.text, c.id), c.score)
-                for c in chunks
-            ]
 
         summary, step = summarize(material, chunks, llm, cfg)
         trace.append(step)

@@ -29,9 +29,9 @@ Experiment configurations (see `seminar_critique/configs.py`):
 | Skeleton, interfaces, contract tests | done (stubs, runs end-to-end with FakeLLM) |
 | Real LLM client | not started |
 | Retrieval (GraphRAG) | real: BM25 + graph expansion, 10 papers, 2 topics (retrieval/stats.json) |
-| Tools and permissions | stub with allowlist |
+| Tools and permissions | real: read-only benchmark lookup, 13 sourced records, permission allowlist ([details](seminar_critique/tools/README.md)) |
 | Eval set and runner | stub, 1 example task |
-| Threat model | template |
+| Threat model | documented; input sanitization and prompt boundaries implemented, live injection evaluation pending ([details](seminar_critique/security/threat_model.md)) |
 
 Update this table as parts become real. Be exact: "stub" means it does not do the real work yet.
 

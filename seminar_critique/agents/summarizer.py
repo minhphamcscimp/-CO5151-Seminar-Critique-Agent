@@ -7,7 +7,9 @@ from __future__ import annotations
 
 from ..llm import LLMClient
 from ..schemas import Chunk, Config, TraceStep
+from ..security import sanitize_untrusted
 from .base import UNTRUSTED_RULE, call_agent
+
 SYSTEM = (
     "You summarize research material so that a reviewer can critique it.\n"
     "Write exactly these four sections, in this order, each 2-4 sentences:\n"
@@ -25,6 +27,9 @@ SYSTEM = (
 def summarize(
     material: str, chunks: list[Chunk], llm: LLMClient, cfg: Config
 ) -> tuple[str, TraceStep]:
-    context = "\n".join(f"[{c.paper} {c.section}] {c.text}" for c in chunks) or "(none)"
+    # Chunk text and its paper/section label are untrusted (threat model entry point 2).
+    context = "\n".join(
+        sanitize_untrusted(c.text, f"{c.paper} {c.section}") for c in chunks
+    ) or "(none)"
     user = f"Material:\n{material}\n\nRetrieved context:\n{context}"
     return call_agent(llm, cfg, "summarizer", SYSTEM, user)
