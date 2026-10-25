@@ -1,0 +1,18 @@
+{
+  "id": "reflexion-memory",
+  "topic": "self-improvement-reflection",
+  "input": "Shinn et al. (2023) introduce Reflexion, where language agents use feedback from task outcomes to write reflective text to an episodic memory buffer and use it in later trials, without updating model weights. Critique a claim that Reflexion is simply weight-level fine-tuning and that its results automatically generalize to settings without task feedback.",
+  "rubric_axes": [
+    "assumptions",
+    "baseline fairness",
+    "data reliability",
+    "generalizability",
+    "reproducibility"
+  ],
+  "key_points": [
+    "episodic memory",
+    "task feedback",
+    "without updating model weights",
+    "generalize"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "huang-intrinsic-self-correction",
+  "topic": "self-improvement-reflection",
+  "input": "Huang et al. (2024), Large Language Models Cannot Self-Correct Reasoning Yet, distinguish intrinsic self-correction (using only the model's own capabilities) from correction using external feedback. Their paper reports that intrinsic self-correction often fails to improve reasoning and can degrade performance. Critique the claim that another ungrounded self-review pass is sufficient evidence of reliable improvement.",
+  "rubric_axes": [
+    "assumptions",
+    "baseline fairness",
+    "data reliability",
+    "generalizability",
+    "reproducibility"
+  ],
+  "key_points": [
+    "intrinsic self-correction",
+    "external feedback",
+    "performance degradation",
+    "evidence of improvement"
+  ]
+}

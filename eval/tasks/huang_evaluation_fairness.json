@@ -1,0 +1,18 @@
+{
+  "id": "huang-evaluation-fairness",
+  "topic": "self-improvement-reflection",
+  "input": "Huang et al. (2024) argue that iterative self-correction consumes multiple model responses. Their analysis compares self-correction and multi-agent debate with self-consistency under an equivalent response budget, and discusses how a weak initial prompt can make a later correction step appear beneficial. Critique a report that attributes gains to self-correction without controlling either inference cost or prompt quality.",
+  "rubric_axes": [
+    "assumptions",
+    "baseline fairness",
+    "data reliability",
+    "generalizability",
+    "reproducibility"
+  ],
+  "key_points": [
+    "equivalent inference cost",
+    "self-consistency baseline",
+    "prompt quality",
+    "initial prompt"
+  ]
+}
