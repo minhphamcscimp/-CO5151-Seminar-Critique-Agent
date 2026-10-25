@@ -1,7 +1,7 @@
 """Tool registry with an allowlist. Owner: Tin.
 
 Every tool is registered with a permission level. Only allowlisted tools can be called,
-and only READ_ONLY tools are allowed to run without extra approval.
+and only READ_ONLY tools are allowed to run. Other permissions are rejected.
 This is the code-level guarantee the report (Part 3) points to.
 """
 from __future__ import annotations

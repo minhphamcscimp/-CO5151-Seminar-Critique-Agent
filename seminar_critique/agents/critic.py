@@ -5,8 +5,11 @@ assumptions, baseline fairness, data reliability, generalizability, reproducibil
 """
 from __future__ import annotations
 
+import json
+
 from ..llm import LLMClient
 from ..schemas import Config, TraceStep
+from ..security import sanitize_untrusted
 from .base import UNTRUSTED_RULE, call_agent
 
 RUBRIC_AXES = [
@@ -40,6 +43,12 @@ def critique(
     cfg: Config,
 ) -> tuple[str, TraceStep]:
     axes = ", ".join(rubric_axes or RUBRIC_AXES)
-    evidence = tool_results or "(no benchmark lookup in this config)"
+    summary = sanitize_untrusted(summary, "summarizer_output")
+    evidence_text = (
+        json.dumps(tool_results, ensure_ascii=False)
+        if tool_results
+        else "(no benchmark lookup in this config)"
+    )
+    evidence = sanitize_untrusted(evidence_text, "benchmark_tool")
     user = f"Summary:\n{summary}\n\nRubric axes: {axes}\n\nBenchmark evidence: {evidence}"
     return call_agent(llm, cfg, "critic", SYSTEM, user, tool_calls=tool_results)

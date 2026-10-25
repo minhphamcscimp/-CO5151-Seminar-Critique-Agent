@@ -8,6 +8,7 @@ from __future__ import annotations
 from ..llm import LLMClient
 from ..schemas import Chunk, Config, TraceStep
 from .base import UNTRUSTED_RULE, call_agent
+
 SYSTEM = (
     "You summarize research material so that a reviewer can critique it.\n"
     "Write exactly these four sections, in this order, each 2-4 sentences:\n"
@@ -25,6 +26,8 @@ SYSTEM = (
 def summarize(
     material: str, chunks: list[Chunk], llm: LLMClient, cfg: Config
 ) -> tuple[str, TraceStep]:
+    # `material` and each chunk text are already wrapped by orchestrator.run_pipeline
+    # (threat model entry points 1 and 2), so they are not wrapped again here.
     context = "\n".join(f"[{c.paper} {c.section}] {c.text}" for c in chunks) or "(none)"
     user = f"Material:\n{material}\n\nRetrieved context:\n{context}"
     return call_agent(llm, cfg, "summarizer", SYSTEM, user)
