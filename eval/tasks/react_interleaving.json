@@ -1,0 +1,18 @@
+{
+  "id": "react-interleaving",
+  "topic": "tool-use-mcp",
+  "input": "Yao et al. (2023) propose ReAct, interleaving language-model reasoning traces with task-specific actions. Reasoning can update action plans and handle exceptions, while actions can gather information from external sources such as knowledge bases or environments. Critique a claim that reasoning traces alone provide the same evidence as interacting with an environment.",
+  "rubric_axes": [
+    "assumptions",
+    "baseline fairness",
+    "data reliability",
+    "generalizability",
+    "reproducibility"
+  ],
+  "key_points": [
+    "reasoning traces",
+    "task-specific actions",
+    "external sources",
+    "environment interaction"
+  ]
+}

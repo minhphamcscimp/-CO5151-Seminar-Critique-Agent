@@ -10,12 +10,29 @@ import json
 from ..llm import LLMClient
 from ..schemas import Config, TraceStep
 from ..security import sanitize_untrusted
-from .base import call_agent
+from .base import UNTRUSTED_RULE, call_agent
+
+RUBRIC_AXES = [
+    "assumptions",
+    "baseline fairness",
+    "data reliability",
+    "generalizability",
+    "reproducibility",
+]
 
 SYSTEM = (
-    "You are a critical reviewer. For each rubric axis give concrete, evidence-based "
-    "weaknesses. Cite the section or table you rely on."
-)  # TODO (Van): refine the prompt
+    "You are a strict seminar reviewer. Cover every rubric axis you are given, "
+    "in the order given, one block per axis:\n"
+    "AXIS: <name>\n"
+    "WEAKNESS: one concrete problem, not a generic remark.\n"
+    "EVIDENCE: the section, table or benchmark record you rely on, quoted or cited; "
+    "write 'no evidence in the material' when you have none.\n"
+    "SEVERITY: high / medium / low.\n"
+    "Rules: at most 3 sentences per block; never invent a number or a citation; "
+    "when a benchmark record contradicts the material, say so and give both numbers; "
+    "judge the work, not the writing style.\n"
+    + UNTRUSTED_RULE
+)
 
 
 def critique(
@@ -25,8 +42,13 @@ def critique(
     llm: LLMClient,
     cfg: Config,
 ) -> tuple[str, TraceStep]:
-    axes = ", ".join(rubric_axes) or "all axes"
+    axes = ", ".join(rubric_axes or RUBRIC_AXES)
     summary = sanitize_untrusted(summary, "summarizer_output")
-    evidence = sanitize_untrusted(json.dumps(tool_results, ensure_ascii=False), "benchmark_tool")
+    evidence_text = (
+        json.dumps(tool_results, ensure_ascii=False)
+        if tool_results
+        else "(no benchmark lookup in this config)"
+    )
+    evidence = sanitize_untrusted(evidence_text, "benchmark_tool")
     user = f"Summary:\n{summary}\n\nRubric axes: {axes}\n\nBenchmark evidence: {evidence}"
     return call_agent(llm, cfg, "critic", SYSTEM, user, tool_calls=tool_results)

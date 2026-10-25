@@ -11,18 +11,28 @@ import json
 from ..llm import LLMClient
 from ..schemas import Config, TraceStep
 from ..security import sanitize_untrusted
-from .base import call_agent
+from .base import UNTRUSTED_RULE, call_agent
+
+NO_CHANGE = "NO CHANGE"
 
 SYSTEM = (
-    "Revise the draft critique using ONLY the external evidence given. "
-    "If the evidence does not change anything, return the draft unchanged."
-)  # TODO (Van): refine the prompt
+    "You revise a draft critique using ONLY the external evidence supplied below "
+    "(benchmark records and retrieved paper chunks). Your own opinion is not evidence.\n"
+    "Procedure: for each piece of evidence decide whether it contradicts, confirms or "
+    "does not touch the draft. Change only the sentences a contradiction forces you to "
+    "change, and cite the evidence in that sentence. Keep the template and the headings "
+    "of the draft.\n"
+    f"If no piece of evidence changes anything, reply with exactly: {NO_CHANGE}\n"
+    "Never add a new weakness that the evidence does not support, and never delete a "
+    "weakness just because the evidence is silent about it.\n"
+    + UNTRUSTED_RULE
+)
 
 
 def reflect(
     draft: str, evidence: list[dict], llm: LLMClient, cfg: Config
 ) -> tuple[str, TraceStep]:
-    draft = sanitize_untrusted(draft, "draft")
-    external = sanitize_untrusted(json.dumps(evidence, ensure_ascii=False), "benchmark_tool")
+    evidence_text = json.dumps(evidence, ensure_ascii=False) if evidence else "(none)"
+    external = sanitize_untrusted(evidence_text, "benchmark_tool")
     user = f"Draft:\n{draft}\n\nExternal evidence: {external}"
     return call_agent(llm, cfg, "reflection", SYSTEM, user, tool_calls=evidence)

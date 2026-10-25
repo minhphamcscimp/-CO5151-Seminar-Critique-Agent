@@ -1,0 +1,18 @@
+{
+  "id": "toolllm-toolbench",
+  "topic": "tool-use-mcp",
+  "input": "Qin et al. (2024) introduce ToolLLM, a framework combining data construction, model training, and evaluation for tool use, including the automatically constructed ToolBench dataset. Critique a claim that success on this benchmark alone proves broad reliability for all real-world APIs.",
+  "rubric_axes": [
+    "assumptions",
+    "baseline fairness",
+    "data reliability",
+    "generalizability",
+    "reproducibility"
+  ],
+  "key_points": [
+    "ToolBench",
+    "data construction",
+    "model training",
+    "real-world APIs"
+  ]
+}
