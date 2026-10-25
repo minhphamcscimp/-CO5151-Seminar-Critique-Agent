@@ -1,0 +1,18 @@
+{
+  "id": "gorilla-api-retrieval",
+  "topic": "tool-use-mcp",
+  "input": "Patil et al. (2023) introduce Gorilla, a fine-tuned model for writing API calls, and report improved adaptation to test-time documentation when it is combined with a document retriever. Critique a claim that this result establishes reliable API use without retrieval or across APIs not represented in the evaluation.",
+  "rubric_axes": [
+    "assumptions",
+    "baseline fairness",
+    "data reliability",
+    "generalizability",
+    "reproducibility"
+  ],
+  "key_points": [
+    "API calls",
+    "document retriever",
+    "test-time documentation",
+    "generalizability"
+  ]
+}
