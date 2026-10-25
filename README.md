@@ -27,10 +27,10 @@ Experiment configurations (see `seminar_critique/configs.py`):
 | Part | Status |
 |---|---|
 | Skeleton, interfaces, contract tests | done (stubs, runs end-to-end with FakeLLM) |
-| Real LLM client | not started |
+| Real LLM client | real: GeminiClient with temperature, per-call model, token usage, latency and cost from price env vars (seminar_critique/llm/) |
 | Retrieval (GraphRAG) | real: BM25 + graph expansion, 10 papers, 2 topics (retrieval/stats.json) |
 | Tools and permissions | real: read-only benchmark lookup, 13 sourced records, permission allowlist ([details](seminar_critique/tools/README.md)) |
-| Eval set and runner | stub, 1 example task |
+| Eval set and runner | real: runner and scorer, 9 tasks x 3 configs, 1 run each (eval/results/results.csv, summary.md); scores are phrase-match proxies |
 | Threat model | documented; input sanitization and prompt boundaries implemented, live injection evaluation pending ([details](seminar_critique/security/threat_model.md)) |
 
 Update this table as parts become real. Be exact: "stub" means it does not do the real work yet.
