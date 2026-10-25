@@ -83,6 +83,18 @@ def test_invalid_arguments_are_rejected(name, metric):
         lookup_benchmark(name, metric)
 
 
+@pytest.mark.parametrize("value", [0, 100])
+def test_lookup_accepts_zero_and_full_scores(monkeypatch, tmp_path, value):
+    record = {"benchmark": "fixture", "metric": "accuracy", "method": "test fixture",
+              "value": value, "source": "Synthetic test data, not published evidence"}
+    path = tmp_path / "benchmarks.json"
+    path.write_text(json.dumps([record]), encoding="utf-8")
+    module = importlib.import_module("seminar_critique.tools.benchmark_lookup")
+    monkeypatch.setattr(module, "BENCHMARKS_PATH", path)
+    out = call_tool("lookup_benchmark", name="fixture", metric="accuracy")
+    assert out["result"] == {**record, "found": True}
+
+
 @pytest.mark.parametrize("contents", [
     "{}", "not json", '[{"benchmark": "GSM8K"}]',
     *[json.dumps([{"benchmark": "GSM8K", "metric": "accuracy", "method": "test",
