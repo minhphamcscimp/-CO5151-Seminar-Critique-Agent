@@ -26,7 +26,7 @@ Experiment configurations (see `seminar_critique/configs.py`):
 
 | Part | Status |
 |---|---|
-| Skeleton, interfaces, contract tests | done (stubs, runs end-to-end with FakeLLM) |
+| Skeleton, interfaces, contract tests | done (contract tests pass, FakeLLM kept for offline tests) |
 | Real LLM client | real: GeminiClient with temperature, per-call model, token usage, latency and cost from price env vars (seminar_critique/llm/) |
 | Retrieval (GraphRAG) | real: BM25 + graph expansion, 10 papers, 2 topics (retrieval/stats.json) |
 | Tools and permissions | real: read-only benchmark lookup, 13 sourced records, permission allowlist; returns evidence for 4 of 9 eval tasks, the other 5 have no matching record ([details](seminar_critique/tools/README.md)) |

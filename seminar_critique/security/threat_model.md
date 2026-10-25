@@ -2,7 +2,7 @@
 
 Scope: the local D2 pipeline, its registered benchmark tool, and the text sent to
 LLMs. Implementation status below describes code, not a measured ability to resist
-prompt injection. GeminiClient is still a stub in this checkout. D2 does not require
+prompt injection. D2 does not require
 live injection experiments; the final report will evaluate those separately.
 
 ## 1. Assets and trust assumptions
@@ -64,10 +64,11 @@ commands also write artifacts outside the agent tool registry.
   network resources or executes code. It cannot retrieve a key that was not put
   into its data; secrets manually pasted into seminar text can still reach an LLM
   or the local trace. Restrict access to those traces.
-- This checkout's orchestrator calls lookup with `task.topic`, not a benchmark
-  name. A topic such as `self-improvement-reflection` therefore returns no match.
-  Van must supply an actual benchmark/metric when integrating evidence selection;
-  the tool must not invent a topic-to-score mapping.
+- Since PR #11 the orchestrator picks benchmark names from the paper under
+  critique (PAPER_BENCHMARKS in orchestrator.py), so 4 of the 9 eval tasks receive
+  published records. For the other 5 tasks there is no matching record, the lookup
+  falls back to `task.topic` and returns `found: false`. The tool itself does not
+  map topics to scores.
 
 ## 4. Verification and planned final-report work
 

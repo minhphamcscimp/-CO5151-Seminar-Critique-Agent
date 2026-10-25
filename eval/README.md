@@ -33,3 +33,13 @@ Pass the same task/config/repeat options when resuming.
 proxies: text is Unicode-normalized, case-folded, and matched by word sequence.
 They do not establish semantic correctness, and paraphrases may be missed.
 Validate evaluation claims with human review and report the sample size.
+
+## Provenance of results/results.csv
+
+The 81 rows (9 tasks x 3 configs x 3 repeats) come from two runs with the same model
+and temperature 0. After PR #11 fixed the benchmark lookup, configs B and C were
+re-run (3 repeats) for the 4 tasks whose pipeline changed (example-01,
+huang-evaluation-fairness, huang-intrinsic-self-correction, react-interleaving).
+Those 24 rows replaced the old ones; the other 57 rows are unchanged. Config A does
+not use the tool, and the 5 other tasks still get found: false. Token counts and
+key-point recall repeat exactly across the 3 repeats, only latency varies.

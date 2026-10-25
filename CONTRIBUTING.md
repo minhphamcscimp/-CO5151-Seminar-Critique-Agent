@@ -24,7 +24,7 @@ Phần 8 do mỗi người tự điền dòng của mình. Muốn sửa thư m�
 
 Các kiểu dữ liệu dùng chung nằm trong `seminar_critique/schemas.py`. Muốn đổi file này hoặc đổi chữ ký ở bảng trên, mở PR có tiêu đề `[contract] ...` và cần cả 4 người đồng ý.
 
-Mỗi giao diện hiện là **stub chạy được**. Bạn thay phần ruột, giữ nguyên chữ ký, thì các module khác không bị vỡ. Nhờ `FakeLLM` nên không ai cần API key để phát triển phần của mình.
+Các giao diện đều đã có cài đặt thật. Nếu sửa phần ruột, giữ nguyên chữ ký thì các module khác không bị vỡ. `FakeLLM` vẫn được giữ để chạy test mà không cần API key.
 
 ## 3. Quy trình Git
 

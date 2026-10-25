@@ -78,10 +78,12 @@ agreement on the shared interface.
 
 ## Integration handoff to Van
 
-- Supply a benchmark name and its metric, e.g. `GSM8K` / `accuracy`. The current
-  orchestrator passes `task.topic`; topic IDs intentionally return no match.
+- Supply a benchmark name and its metric, e.g. `GSM8K` / `accuracy`. The
+  orchestrator maps the paper under critique to benchmark names (PAPER_BENCHMARKS in
+  orchestrator.py, PR #11). Tasks with no mapped benchmark fall back to
+  `task.topic`, which returns no match.
 - `agents.base.call_agent` appends `UNTRUSTED_CONTENT_POLICY` to every system
-  message. Keep this policy when replacing the stub prompts.
+  message. Keep this policy when editing the agent prompts.
 - Critic and Reflection sanitize the JSON rendering of tool evidence. The raw
   structured result remains in `TraceStep.tool_calls` for debugging and auditing.
 - Retrieved text/metadata is sanitized together in Summarizer, at the point it is
