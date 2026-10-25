@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from ..llm import LLMClient
 from ..schemas import Config, TraceStep
+from ..security import sanitize_untrusted
 from .base import call_agent
 
 SYSTEM = (
@@ -17,5 +18,7 @@ SYSTEM = (
 def synthesize(
     summary: str, critique_text: str, llm: LLMClient, cfg: Config
 ) -> tuple[str, TraceStep]:
+    summary = sanitize_untrusted(summary, "summarizer_output")
+    critique_text = sanitize_untrusted(critique_text, "critic_output")
     user = f"Summary:\n{summary}\n\nCritique:\n{critique_text}"
     return call_agent(llm, cfg, "synthesizer", SYSTEM, user)

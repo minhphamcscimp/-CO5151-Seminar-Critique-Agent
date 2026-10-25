@@ -1,3 +1,3 @@
-from .sanitize import sanitize_untrusted
+from .sanitize import UNTRUSTED_CONTENT_POLICY, sanitize_untrusted
 
-__all__ = ["sanitize_untrusted"]
+__all__ = ["UNTRUSTED_CONTENT_POLICY", "sanitize_untrusted"]

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from ..llm import LLMClient
 from ..schemas import Config, TraceStep
+from ..security import UNTRUSTED_CONTENT_POLICY
 
 
 def call_agent(
@@ -15,7 +16,10 @@ def call_agent(
 ) -> tuple[str, TraceStep]:
     """Run one agent step and return (text, trace step with usage)."""
     resp = llm.complete(
-        [{"role": "system", "content": system}, {"role": "user", "content": user}],
+        [
+            {"role": "system", "content": f"{system}\n\n{UNTRUSTED_CONTENT_POLICY}"},
+            {"role": "user", "content": user},
+        ],
         model=cfg.models[agent],
         temperature=cfg.temperature,
     )

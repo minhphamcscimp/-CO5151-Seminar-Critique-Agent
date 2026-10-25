@@ -1,0 +1,93 @@
+[
+  {
+    "benchmark": "AmbigNQ",
+    "metric": "exact_match",
+    "method": "CRITIC (gpt-3.5-turbo, non-oracle)",
+    "value": 62.0,
+    "source": "Gou et al. (2024), CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing, Table 1, ChatGPT CRITIC row, EM (%); 500 validation examples. https://arxiv.org/html/2305.11738v4#S4.T1"
+  },
+  {
+    "benchmark": "AmbigNQ",
+    "metric": "f1",
+    "method": "CRITIC (gpt-3.5-turbo, non-oracle)",
+    "value": 74.9,
+    "source": "Gou et al. (2024), CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing, Table 1, ChatGPT CRITIC row, F1 (%); 500 validation examples. https://arxiv.org/html/2305.11738v4#S4.T1"
+  },
+  {
+    "benchmark": "TriviaQA",
+    "metric": "exact_match",
+    "method": "CRITIC (gpt-3.5-turbo, non-oracle)",
+    "value": 75.1,
+    "source": "Gou et al. (2024), CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing, Table 1, ChatGPT CRITIC row, EM (%); 500 validation examples. https://arxiv.org/html/2305.11738v4#S4.T1"
+  },
+  {
+    "benchmark": "TriviaQA",
+    "metric": "f1",
+    "method": "CRITIC (gpt-3.5-turbo, non-oracle)",
+    "value": 81.7,
+    "source": "Gou et al. (2024), CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing, Table 1, ChatGPT CRITIC row, F1 (%); 500 validation examples. https://arxiv.org/html/2305.11738v4#S4.T1"
+  },
+  {
+    "benchmark": "HotpotQA",
+    "metric": "exact_match",
+    "method": "CRITIC (gpt-3.5-turbo, non-oracle)",
+    "value": 40.3,
+    "source": "Gou et al. (2024), CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing, Table 1, ChatGPT CRITIC row, EM (%); 500 validation examples. https://arxiv.org/html/2305.11738v4#S4.T1"
+  },
+  {
+    "benchmark": "HotpotQA",
+    "metric": "f1",
+    "method": "CRITIC (gpt-3.5-turbo, non-oracle)",
+    "value": 52.9,
+    "source": "Gou et al. (2024), CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing, Table 1, ChatGPT CRITIC row, F1 (%); 500 validation examples. https://arxiv.org/html/2305.11738v4#S4.T1"
+  },
+  {
+    "benchmark": "GSM8K",
+    "metric": "accuracy",
+    "method": "CRITIC (gpt-3.5-turbo, non-oracle)",
+    "value": 78.2,
+    "source": "Gou et al. (2024), CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing, Table 2, ChatGPT CRITIC row, rounded numeric exact match (%), official test split. https://arxiv.org/html/2305.11738v4#S4.T2"
+  },
+  {
+    "benchmark": "SVAMP",
+    "metric": "accuracy",
+    "method": "CRITIC (gpt-3.5-turbo, non-oracle)",
+    "value": 83.3,
+    "source": "Gou et al. (2024), CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing, Table 2, ChatGPT CRITIC row, rounded numeric exact match (%), official test split. https://arxiv.org/html/2305.11738v4#S4.T2"
+  },
+  {
+    "benchmark": "TabMWP",
+    "metric": "accuracy",
+    "method": "CRITIC (gpt-3.5-turbo, non-oracle)",
+    "value": 89.0,
+    "source": "Gou et al. (2024), CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing, Table 2, ChatGPT CRITIC row, rounded numeric exact match (%), official test split. https://arxiv.org/html/2305.11738v4#S4.T2"
+  },
+  {
+    "benchmark": "FEVER",
+    "metric": "accuracy",
+    "method": "ReAct (PaLM-540B)",
+    "value": 60.9,
+    "source": "Yao et al. (2023), ReAct: Synergizing Reasoning and Acting in Language Models, Table 1, ReAct row, Acc (%). https://arxiv.org/html/2210.03629v3#S3.T1"
+  },
+  {
+    "benchmark": "ALFWorld",
+    "metric": "success_rate",
+    "method": "ReAct (PaLM-540B, average over 6 prompts)",
+    "value": 57.0,
+    "source": "Yao et al. (2023), ReAct: Synergizing Reasoning and Acting in Language Models, Table 3, ReAct (avg) row, All column, success rate (%), 134 unseen games; not best-of-6. https://arxiv.org/html/2210.03629v3#S4.T3"
+  },
+  {
+    "benchmark": "WebShop",
+    "metric": "score",
+    "method": "ReAct (PaLM-540B)",
+    "value": 66.6,
+    "source": "Yao et al. (2023), ReAct: Synergizing Reasoning and Acting in Language Models, Table 4, ReAct row, Score (0–100), 500 test instructions. https://arxiv.org/html/2210.03629v3#S4.T4"
+  },
+  {
+    "benchmark": "WebShop",
+    "metric": "success_rate",
+    "method": "ReAct (PaLM-540B)",
+    "value": 40.0,
+    "source": "Yao et al. (2023), ReAct: Synergizing Reasoning and Acting in Language Models, Table 4, ReAct row, SR (%), 500 test instructions. https://arxiv.org/html/2210.03629v3#S4.T4"
+  }
+]
