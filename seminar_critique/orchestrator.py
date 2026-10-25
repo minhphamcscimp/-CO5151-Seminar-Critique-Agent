@@ -10,6 +10,7 @@ Config A is a single LLM call, used as the simple baseline.
 """
 from __future__ import annotations
 
+import re
 import time
 
 from .agents import critique, reflect, summarize, synthesize
@@ -22,6 +23,39 @@ from .security import sanitize_untrusted
 from .tools import call_tool
 
 BASELINE_SYSTEM = "Write a structured critique of the following seminar material."
+
+# The benchmark file is indexed by benchmark name (GSM8K, HotpotQA, ...), not by
+# task topic. Pick the benchmarks the paper under critique actually reports, so the
+# lookup tool can return real records. Names must exist in data/benchmarks.json.
+PAPER_BENCHMARKS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (r"\bHuang et al\b", ("HotpotQA", "GSM8K")),
+    (r"\bReAct\b", ("HotpotQA", "FEVER", "ALFWorld", "WebShop")),
+)
+# A benchmark may have several metrics; the tool needs the exact one.
+METRIC_ORDER = ("accuracy", "exact_match", "f1", "success_rate", "score")
+
+
+def _benchmark_names(task: Task) -> list[str]:
+    names: list[str] = []
+    for pattern, benchmarks in PAPER_BENCHMARKS:
+        if re.search(pattern, task.input):
+            names.extend(b for b in benchmarks if b not in names)
+    return names
+
+
+def _lookup_benchmarks(task: Task) -> list[dict]:
+    """Call the read-only benchmark tool and keep the records it finds.
+
+    If the paper maps to no known benchmark, or nothing is found, return the single
+    old lookup by topic, so the trace still shows that the tool was tried.
+    """
+    found: list[dict] = []
+    for name in _benchmark_names(task):
+        for metric in METRIC_ORDER:
+            out = call_tool("lookup_benchmark", name=name, metric=metric)
+            if out["result"].get("found"):
+                found.append(out)
+    return found or [call_tool("lookup_benchmark", name=task.topic, metric="accuracy")]
 
 
 def _normalize(text: str) -> str:
@@ -63,7 +97,7 @@ def run_pipeline(task: Task, cfg: Config, llm: LLMClient | None = None) -> Resul
 
         tool_results: list[dict] = []
         if cfg.use_tools:
-            tool_results.append(call_tool("lookup_benchmark", name=task.topic, metric="accuracy"))
+            tool_results.extend(_lookup_benchmarks(task))
 
         critique_text, step = critique(summary, task.rubric_axes, tool_results, llm, cfg)
         trace.append(step)
