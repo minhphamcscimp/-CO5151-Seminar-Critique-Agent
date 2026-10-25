@@ -49,7 +49,7 @@ python -m seminar_critique.run --task eval/tasks/example_task.json --config C
 python -m eval.runner --repeats 3
 ```
 
-Mặc định dùng `FakeLLM` (không cần key). Khi `GeminiClient` xong: đặt biến môi trường `GEMINI_API_KEY` rồi thêm `--llm gemini`. Không bao giờ commit key (xem `.env.example`).
+Mặc định dùng `FakeLLM` (không cần key). Để chạy model thật: đặt biến môi trường `GEMINI_API_KEY` rồi thêm `--llm gemini`. Không bao giờ commit key (xem `.env.example`).
 
 ## 5. Quy tắc nhỏ
 
