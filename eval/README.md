@@ -11,7 +11,7 @@ Run the evaluation and summarize its CSV with:
 
 ```text
 python -m eval.runner --repeats 1
-python -m eval.summarize
+python -m eval.summarize --repeats 1
 ```
 
 The runner defaults to `FakeLLM`; its output is for checking the pipeline, not
@@ -21,6 +21,10 @@ available and `GEMINI_API_KEY` is configured. The Gemini client uses
 set `GEMINI_MODEL` to override that default. Explicit model names in a config
 are passed through unchanged. The runner writes one CSV row per task, config,
 and repeat, plus traces under `traces/`.
+Gemini calls are paced at about 10 requests per minute by default. If a run is
+interrupted, its completed CSV rows are flushed immediately; continue without
+repeating them with `python -m eval.runner --llm gemini --repeats 3 --resume`.
+Pass the same task/config/repeat options when resuming.
 
 `key_point_recall` and `rubric_axis_coverage` are deterministic phrase-coverage
 proxies: text is Unicode-normalized, case-folded, and matched by word sequence.
