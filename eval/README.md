@@ -24,6 +24,9 @@ and repeat, plus traces under `traces/`.
 Gemini calls are paced at about 10 requests per minute by default. If a run is
 interrupted, its completed CSV rows are flushed immediately; continue without
 repeating them with `python -m eval.runner --llm gemini --repeats 3 --resume`.
+If Gemini reports that its quota is exhausted, the runner stops without saving
+the failed run, preserves completed rows, and exits with an error. Resume with
+the same options and `--resume` after quota is available again.
 Pass the same task/config/repeat options when resuming.
 
 `key_point_recall` and `rubric_axis_coverage` are deterministic phrase-coverage
