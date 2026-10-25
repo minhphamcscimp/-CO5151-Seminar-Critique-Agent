@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from seminar_critique.configs import CONFIGS, resolve_models
-from seminar_critique.llm import LLMClient, LLMResponse, get_client
+from seminar_critique.llm import LLMClient, LLMResponse, OutOfQuotaError, get_client
 from seminar_critique.orchestrator import run_pipeline
 from seminar_critique.run import save_trace
 from seminar_critique.schemas import Task
@@ -173,6 +173,13 @@ def main() -> None:
                 ):
                     completed_tasks += 1
                     print(f"completed task {completed_tasks}/{len(tasks)}: {task.id}", flush=True)
+        except OutOfQuotaError as exc:
+            p.exit(
+                1,
+                f"Gemini quota exhausted: {exc}. The current run was not saved; "
+                f"completed rows remain in {output_path}. After quota resets, rerun "
+                "the same command with --resume.\n",
+            )
         except KeyboardInterrupt:
             interrupted = True
             active_run = (

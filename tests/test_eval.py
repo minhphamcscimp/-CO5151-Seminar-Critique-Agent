@@ -10,7 +10,7 @@ import pytest
 
 from eval import runner, summarize
 from eval.scorer import score
-from seminar_critique.llm import LLMResponse
+from seminar_critique.llm import LLMResponse, OutOfQuotaError
 from seminar_critique.schemas import Result, Task, Usage
 
 
@@ -355,3 +355,50 @@ def test_runner_resume_skips_completed_runs(tmp_path: Path, monkeypatch: pytest.
     assert configs_seen == ["B", "C"]
     assert len(rows) == 3
     assert [row["config"] for row in rows] == ["A", "B", "C"]
+
+
+def test_runner_preserves_completed_rows_when_quota_is_exhausted(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+):
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    task = {
+        "id": "quota",
+        "topic": "self-improvement-reflection",
+        "input": "Critique this claim.",
+        "rubric_axes": ["assumptions"],
+        "key_points": ["external feedback"],
+    }
+    (tasks_dir / "task.json").write_text(json.dumps(task), encoding="utf-8")
+    results_path = tmp_path / "results.csv"
+
+    def run_pipeline(task, config, _llm):
+        if config.name == "B":
+            raise OutOfQuotaError("Gemini quota exhausted for test-model")
+        return Result(task_id=task.id, config_name=config.name, answer="answer")
+
+    monkeypatch.setattr(runner, "run_pipeline", run_pipeline)
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "eval.runner",
+            "--tasks", str(tasks_dir),
+            "--configs", "A", "B",
+            "--repeats", "1",
+            "--out", str(results_path),
+            "--traces", str(tmp_path / "traces"),
+        ],
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        runner.main()
+
+    assert exc_info.value.code == 1
+    with results_path.open(newline="", encoding="utf-8") as csv_file:
+        rows = list(csv.DictReader(csv_file))
+    assert [(row["config"], row["run"]) for row in rows] == [("A", "0")]
+    error_output = capsys.readouterr().err
+    assert "current run was not saved" in error_output
+    assert "with --resume" in error_output

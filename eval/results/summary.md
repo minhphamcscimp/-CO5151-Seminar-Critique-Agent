@@ -4,6 +4,6 @@ Arithmetic means across runs in `results.csv`. Coverage metrics are literal phra
 
 | Config | Tasks | Runs | Key-point recall | Rubric-axis coverage | Prompt tokens | Completion tokens | Cost (USD) | Latency (s) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| A | 9 | 9 | 0.426 | 0.044 | 149.222 | 853.444 | 0.000 | 11.078 |
-| B | 9 | 9 | 0.407 | 1.000 | 3856.889 | 1112.000 | 0.001 | 19.690 |
-| C | 9 | 9 | 0.407 | 1.000 | 4783.333 | 1167.111 | 0.001 | 28.350 |
+| A | 9 | 27 | 0.426 | 0.044 | 149.222 | 853.444 | 0.000 | 11.331 |
+| B | 9 | 27 | 0.407 | 1.000 | 3856.889 | 1112.000 | 0.001 | 26.980 |
+| C | 9 | 27 | 0.407 | 1.000 | 4783.333 | 1167.111 | 0.001 | 30.805 |
